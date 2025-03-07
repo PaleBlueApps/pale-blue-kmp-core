@@ -22,10 +22,27 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            // ktor
+            api(libs.ktor.client.core)
+            api(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.kotlinx.serialization.json)
+
+            // multiplatform settings
+            api(libs.multiplatform.settings)
+            api(libs.androidx.datastore.preferences.core)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+
+        androidMain.dependencies {
+            api(libs.ktor.client.okhttp)
+            api(libs.kotlinx.coroutines.android)
+            implementation(libs.androidx.security.crypto)
+        }
+
+        iosMain.dependencies {
+            api(libs.ktor.client.darwin)
         }
     }
 }
