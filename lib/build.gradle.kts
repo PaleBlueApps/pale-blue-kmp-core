@@ -23,26 +23,26 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // ktor
-            api(libs.ktor.client.core)
-            api(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
             implementation(libs.kotlinx.serialization.json)
 
             // multiplatform settings
-            api(libs.multiplatform.settings)
-            api(libs.androidx.datastore.preferences.core)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.androidx.datastore.preferences.core)
         }
 
         androidMain.dependencies {
-            api(libs.ktor.client.okhttp)
-            api(libs.kotlinx.coroutines.android)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.security.crypto)
         }
 
         iosMain.dependencies {
-            api(libs.ktor.client.darwin)
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
