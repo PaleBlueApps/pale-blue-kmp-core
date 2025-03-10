@@ -27,6 +27,39 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
+/**
+ * `ApiManager` is a utility class designed to simplify making HTTP requests to REST APIs using the Ktor HTTP client.
+ * It provides a convenient way to configure the client, handle common tasks like serialization, logging, and timeouts,
+ * and make requests with custom endpoints, bodies, query parameters, and headers.
+ *
+ * @property baseUrl The base URL for all API requests.
+ * @property enableLogging Whether to enable HTTP request/response logging. Defaults to `false`.
+ * @property requestTimeout The maximum duration allowed for an entire request to complete, including sending the request and receiving the response. Defaults to 30 seconds.
+ * @property socketTimeout The maximum duration allowed for reading data from the server after a connection has been established. Defaults to 30 seconds.
+ * @property connectTimeout The maximum duration allowed for establishing a connection to the server. Defaults to 30 seconds.
+ * @property defaultRequestConfig A lambda function to configure the `DefaultRequest` plugin. Useful for setting default headers, authentication, etc.
+ * @property responseValidator A lambda function to validate the HTTP response.
+ *
+ * ## Usage example
+ * ```
+ * val apiManager = ApiManager(
+ *     baseUrl = "https://api.example.com/",
+ *     enableLogging = true,
+ *     defaultRequestConfig = {
+ *         header("X-ID-device", "android")
+ *         header("X-API-Version", "1")
+ *     },
+ *     responseValidator = { response ->
+ *         when (response.status.value) {
+ *             in 200..299 -> {}
+ *             401 -> throw Error.UnauthorizedError
+ *             in 400..499 -> throw Error.BackendResponseError
+ *             else -> throw Error.BackendError
+ *         }
+ *     },
+ * )
+ * ```
+ */
 class ApiManager(
     private val baseUrl: String,
     private val enableLogging: Boolean = false,
@@ -62,6 +95,38 @@ class ApiManager(
         HttpResponseValidator { validateResponse(responseValidator) }
     }
 
+    /**
+     * Makes an asynchronous HTTP request to the specified endpoint and attempts to deserialize the response body
+     * to the specified type [Res].
+     *
+     * This function is a wrapper around the `request` function and handles the response body parsing and error handling.
+     * It uses `Dispatchers.IO` for network operations.
+     *
+     * @param endpoint The [Endpoint] object defining the request's URL, method, and other details.
+     * @param body The optional request body. Defaults to an empty string. Can be any object that Ktor can serialize.
+     * @param queryParameters A map of query parameters to include in the request URL. Defaults to an empty map.
+     * @param headers A list of headers to include in the request. Each header is represented as a pair of (name, value). Defaults to an empty list.
+     * @param additional An optional lambda that can be used to add further customization to the [HttpRequestBuilder].
+     *                   This allows setting things like request timeout or custom headers not covered by the `headers` parameter.
+     *                   Defaults to an empty lambda (no additional customization).
+     * @return A [Result] object containing either the deserialized response body of type [Res] on success,
+     *         or a [Throwable] representing an error that occurred during the request or deserialization.
+     *
+     * ## Usage example
+     * ```
+     * data class User(val id: Int, val name: String)
+     *
+     * val endpoint = Endpoint("/users", HttpMethod.Get)
+     *
+     * // Successful request example
+     * val userResult: Result<User> = call(endpoint)
+     * userResult.onSuccess { user ->
+     *     println("User ID: ${user.id}, User Name: ${user.name}")
+     * }.onFailure { exception ->
+     *     println("Error: ${exception.message}")
+     * }
+     * ```
+     **/
     suspend inline fun <reified Res : Any> call(
         endpoint: Endpoint,
         body: Any? = "",
@@ -83,6 +148,21 @@ class ApiManager(
         }
     }
 
+    /**
+     * Makes an asynchronous HTTP request to the specified endpoint.
+     *
+     * @param endpoint The [Endpoint] object defining the request's URL, method, and other details.
+     * @param body The optional request body. Defaults to an empty string. Can be any object that Ktor can serialize.
+     * @param queryParameters A map of query parameters to include in the request URL. Defaults to an empty map.
+     * @param headers A list of headers to include in the request. Each header is represented as a pair of (name, value). Defaults to an empty list.
+     * @param additional An optional lambda that can be used to add further customization to the [HttpRequestBuilder].
+     *                   This allows setting things like request timeout or custom headers not covered by the `headers` parameter.
+     *                   Defaults to an empty lambda (no additional customization).
+     *
+     * @return A [Result] object containing either the [HttpResponse] on success,
+     *         or a [Throwable] representing an error that occurred during the request.
+     *
+     */
     suspend fun request(
         endpoint: Endpoint,
         body: Any? = "",
