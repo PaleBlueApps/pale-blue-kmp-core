@@ -94,7 +94,7 @@ publishing {
 
         pom {
             name.set("PaleBlueKmmCore")
-            description.set("A Kotlin Multiplatform library")
+            description.set("A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms")
             url.set("https://github.com/paleblueapps/pale-blue-kmm-core")
 
             licenses {
@@ -107,7 +107,7 @@ publishing {
             developers {
                 developer {
                     id.set("paleblueapps")
-                    name.set("Pale Blue Apps")
+                    name.set("Pale Blue")
                 }
             }
             scm {
