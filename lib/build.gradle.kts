@@ -1,9 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    id("maven-publish")
+    `maven-publish`
+    signing
 }
 
 kotlin {
@@ -61,6 +63,29 @@ android {
     }
 }
 
+// Stub secrets to let the project sync and build without the publication values set up
+extra["signing.keyId"] = null
+extra["signing.password"] = null
+extra["signing.secretKeyRingFile"] = null
+extra["ossrhUsername"] = null
+extra["ossrhPassword"] = null
+
+// Grabbing secrets from local.properties file or from environment variables, which could be used on CI
+val secretPropsFile = project.rootProject.file("local.properties")
+if (secretPropsFile.exists()) {
+    secretPropsFile.reader().use {
+        Properties().apply { load(it) }
+    }.onEach { (name, value) ->
+        extra[name.toString()] = value
+    }
+} else {
+    extra["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
+    extra["signing.password"] = System.getenv("SIGNING_PASSWORD")
+    extra["signing.secretKeyRingFile"] = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
+    extra["ossrhUsername"] = System.getenv("OSSRH_USERNAME")
+    extra["ossrhPassword"] = System.getenv("OSSRH_PASSWORD")
+}
+
 publishing {
     publications.withType<MavenPublication> {
         groupId = "com.paleblueapps"
@@ -91,7 +116,27 @@ publishing {
         }
 
         repositories {
-            mavenLocal()
+            maven {
+                name = "sonatypeSnapshot"
+                setUrl("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                credentials {
+                    username = extra["ossrhUsername"] as? String
+                    password = extra["ossrhPassword"] as? String
+                }
+            }
+
+            maven {
+                name = "sonatype"
+                setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                credentials {
+                    username = extra["ossrhUsername"] as? String
+                    password = extra["ossrhPassword"] as? String
+                }
+            }
         }
     }
+}
+
+signing {
+    sign(publishing.publications)
 }
