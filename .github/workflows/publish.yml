@@ -2,15 +2,6 @@ name: Publish
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy to'
-        required: true
-        default: 'staging'
-        type: choice
-        options:
-          - staging
-          - production
 
 jobs:
   build:
@@ -38,11 +29,9 @@ jobs:
           echo "SIGNING_SECRET_KEY_RING_FILE=$(pwd)/secret_key" >> $GITHUB_ENV
 
       - name: Publish to Sonatype Repository
-        run: |
-          if [[ "${{ github.event.inputs.environment }}" == "production" ]]; then
-            echo "Publishing to production repository..."
-            ./gradlew publishAllPublicationsToSonatypeRepository --no-daemon --stacktrace
-          else
-            echo "Publishing to snapshot repository..."
-            ./gradlew publishAllPublicationsToSonatypeSnapshotRepository --no-daemon --stacktrace
-          fi
+        run: ./gradlew publishAllPublicationsToSonatypeRepository --no-configuration-cache
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
