@@ -1,0 +1,37 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set Up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: true
+          cache-cleanup: always
+
+      - name: Setup Signing Key
+        run: |
+          echo "${{ secrets.SIGNING_SECRET_KEY_BASE64 }}" | base64 -d > secret_key
+          echo "SIGNING_SECRET_KEY_RING_FILE=$(pwd)/secret_key" >> $GITHUB_ENV
+
+      - name: Publish to Sonatype Repository
+        run: ./gradlew publishAllPublicationsToSonatypeRepository --no-configuration-cache
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
