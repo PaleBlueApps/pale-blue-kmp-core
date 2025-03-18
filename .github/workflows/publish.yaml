@@ -29,7 +29,7 @@ jobs:
           echo "SIGNING_SECRET_KEY_RING_FILE=$(pwd)/secret_key" >> $GITHUB_ENV
 
       - name: Publish to Sonatype Repository
-        run: ./gradlew publishAllPublicationsToSonatypeRepository --no-configuration-cache
+        run: ./gradlew publishToMavenCentral --no-configuration-cache
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
