@@ -72,18 +72,25 @@ mavenPublishing {
     )
 
     pom {
-        name.set("PaleBlueKmmCore")
-        description.set("A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms")
-        url.set("https://github.com/paleblueapps/pale-blue-kmm-core")
+        name = "PaleBlueKmmCore"
+        description = "A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms"
+        url = "https://github.com/paleblueapps/pale-blue-kmm-core"
 
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
         developers {
             developer {
-                id.set("paleblueapps")
-                name.set("Pale Blue")
+                id = "paleblueapps"
+                name = "Pale Blue"
             }
         }
         scm {
-            url.set("https://github.com/paleblueapps/pale-blue-kmm-core")
+            url = "https://github.com/paleblueapps/pale-blue-kmm-core"
         }
     }
 }
