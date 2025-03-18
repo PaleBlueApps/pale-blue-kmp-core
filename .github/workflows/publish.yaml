@@ -23,15 +23,11 @@ jobs:
           validate-wrappers: true
           cache-cleanup: always
 
-      - name: Setup Signing Key
-        run: |
-          echo "${{ secrets.SIGNING_SECRET_KEY_BASE64 }}" | base64 -d | gpg --dearmor > secret_key
-          echo "SIGNING_SECRET_KEY_RING_FILE=$(pwd)/secret_key" >> $GITHUB_ENV
-
       - name: Publish to Sonatype Repository
         run: ./gradlew publishToMavenCentral --no-configuration-cache
         env:
-          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_PRIVATE_KEY }}

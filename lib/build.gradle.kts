@@ -1,6 +1,5 @@
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -63,29 +62,6 @@ android {
     }
 }
 
-// Stub secrets to let the project sync and build without the publication values set up
-extra["signing.keyId"] = null
-extra["signing.password"] = null
-extra["signing.secretKeyRingFile"] = null
-extra["mavenCentralUsername"] = null
-extra["mavenCentralPassword"] = null
-
-// Grabbing secrets from local.properties file or from environment variables, which could be used on CI
-val secretPropsFile = project.rootProject.file("local.properties")
-if (secretPropsFile.exists()) {
-    secretPropsFile.reader().use {
-        Properties().apply { load(it) }
-    }.onEach { (name, value) ->
-        extra[name.toString()] = value
-    }
-} else {
-    extra["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
-    extra["signing.password"] = System.getenv("SIGNING_PASSWORD")
-    extra["signing.secretKeyRingFile"] = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
-    extra["mavenCentralUsername"] = System.getenv("MAVEN_CENTRAL_USERNAME")
-    extra["mavenCentralPassword"] = System.getenv("MAVEN_CENTRAL_PASSWORD")
-}
-
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
@@ -96,18 +72,18 @@ mavenPublishing {
     )
 
     pom {
-        name = "PaleBlueKmmCore"
-        description = "A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms"
-        url = "https://github.com/paleblueapps/pale-blue-kmm-core"
+        name.set("PaleBlueKmmCore")
+        description.set("A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms")
+        url.set("https://github.com/paleblueapps/pale-blue-kmm-core")
 
         developers {
             developer {
-                id = "paleblueapps"
-                name = "Pale Blue"
+                id.set("paleblueapps")
+                name.set("Pale Blue")
             }
         }
         scm {
-            url = "https://github.com/paleblueapps/pale-blue-kmm-core"
+            url.set("https://github.com/paleblueapps/pale-blue-kmm-core")
         }
     }
 }
