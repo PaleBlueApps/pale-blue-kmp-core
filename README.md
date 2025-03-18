@@ -12,7 +12,7 @@ A Kotlin Multiplatform (KMP) library for shared logic and common utilities acros
 Add the library dependency to your `build.gradle.kts` or `build.gradle` file.
 ```kotlin
 dependencies {
-    api("com.paleblueapps:kmmcore:1.0.1")
+    implementation("com.paleblueapps:kmmcore:1.0.1")
 }
 ```
 
