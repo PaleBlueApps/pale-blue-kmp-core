@@ -1,6 +1,6 @@
-# Paleblue-KmmCore (KMM)
+# Pale Blue KMM Core
 
-A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms
+A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms (Android, iOS)
 
 ## Features
 
@@ -53,7 +53,7 @@ userResult.onSuccess { user ->
 // Create PreferencesManager
 
 // file: commonMain/PreferencesManager.kt
-val preferencesFileName = "preferences.preferences_pb"
+val preferencesFileName = "preferences.preferences_pb" // NOTE: this file extension should be preferences_pb
 val encryptedPreferencesFileName = "encrypted_preferences"
 expect val preferencesManager: PreferencesManager
 
