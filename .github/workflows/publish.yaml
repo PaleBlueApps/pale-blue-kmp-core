@@ -25,7 +25,7 @@ jobs:
 
       - name: Setup Signing Key
         run: |
-          echo "${{ secrets.SIGNING_SECRET_KEY_BASE64 }}" | base64 -d > secret_key
+          echo "${{ secrets.SIGNING_SECRET_KEY_BASE64 }}" | base64 -d | gpg --dearmor > secret_key
           echo "SIGNING_SECRET_KEY_RING_FILE=$(pwd)/secret_key" >> $GITHUB_ENV
 
       - name: Publish to Sonatype Repository
