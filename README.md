@@ -53,8 +53,8 @@ userResult.onSuccess { user ->
 // Create PreferencesManager
 
 // file: commonMain/PreferencesManager.kt
-val preferencesFileName = "preferences.pb"
-val encryptedPreferencesFileName = "encrypted_preferences.pb"
+val preferencesFileName = "preferences.preferences_pb"
+val encryptedPreferencesFileName = "encrypted_preferences"
 expect val preferencesManager: PreferencesManager
 
 // file: androidMain/PreferencesManager.kt
