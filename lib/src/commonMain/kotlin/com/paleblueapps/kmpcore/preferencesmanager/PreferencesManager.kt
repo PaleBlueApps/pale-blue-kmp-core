@@ -1,4 +1,4 @@
-package com.paleblueapps.kmmcore.preferencesmanager
+package com.paleblueapps.kmpcore.preferencesmanager
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.DeserializationStrategy

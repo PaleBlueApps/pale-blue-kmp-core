@@ -1,4 +1,4 @@
-# Pale Blue KMM Core
+# Pale Blue KMP Core
 
 A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms (Android, iOS)
 
@@ -12,7 +12,7 @@ A Kotlin Multiplatform (KMP) library for shared logic and common utilities acros
 Add the library dependency to your `build.gradle.kts` or `build.gradle` file.
 ```kotlin
 dependencies {
-    implementation("com.paleblueapps:kmmcore:1.0.1")
+    implementation("com.paleblueapps:kmpcore:1.0.0")
 }
 ```
 

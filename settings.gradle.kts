@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "KmmCore"
+rootProject.name = "KmpCore"
 include(":lib")

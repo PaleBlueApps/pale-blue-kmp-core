@@ -1,4 +1,4 @@
-package com.paleblueapps.kmmcore.preferencesmanager
+package com.paleblueapps.kmpcore.preferencesmanager
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

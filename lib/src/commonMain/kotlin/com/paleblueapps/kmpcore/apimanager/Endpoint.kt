@@ -1,4 +1,4 @@
-package com.paleblueapps.kmmcore.apimanager
+package com.paleblueapps.kmpcore.apimanager
 
 import io.ktor.http.HttpMethod
 

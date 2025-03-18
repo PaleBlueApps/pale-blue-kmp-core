@@ -51,7 +51,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.paleblueapps.kmmcore"
+    namespace = "com.paleblueapps.kmpcore"
     compileSdk = 35
     defaultConfig {
         minSdk = 24
@@ -67,14 +67,14 @@ mavenPublishing {
     signAllPublications()
     coordinates(
         groupId = "com.paleblueapps",
-        artifactId = "kmmcore",
-        version = "1.0.1"
+        artifactId = "kmpcore",
+        version = "1.0.0"
     )
 
     pom {
         name = "PaleBlueKmmCore"
         description = "A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms"
-        url = "https://github.com/paleblueapps/pale-blue-kmm-core"
+        url = "https://github.com/paleblueapps/pale-blue-kmp-core"
 
         licenses {
             license {
@@ -90,7 +90,7 @@ mavenPublishing {
             }
         }
         scm {
-            url = "https://github.com/paleblueapps/pale-blue-kmm-core"
+            url = "https://github.com/paleblueapps/pale-blue-kmp-core"
         }
     }
 }
