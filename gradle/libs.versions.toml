@@ -7,6 +7,7 @@ kotlinxSerializationJson = "1.8.0"
 ktor = "3.0.3"
 multiplatformSettings = "1.2.0"
 securityCrypto = "1.0.0"
+mavenPublish = "0.31.0"
 
 [libraries]
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
@@ -25,3 +26,4 @@ multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", vers
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }

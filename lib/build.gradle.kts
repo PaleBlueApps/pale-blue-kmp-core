@@ -1,11 +1,11 @@
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    `maven-publish`
-    signing
+    alias(libs.plugins.mavenPublish)
 }
 
 kotlin {
@@ -67,8 +67,8 @@ android {
 extra["signing.keyId"] = null
 extra["signing.password"] = null
 extra["signing.secretKeyRingFile"] = null
-extra["ossrhUsername"] = null
-extra["ossrhPassword"] = null
+extra["mavenCentralUsername"] = null
+extra["mavenCentralPassword"] = null
 
 // Grabbing secrets from local.properties file or from environment variables, which could be used on CI
 val secretPropsFile = project.rootProject.file("local.properties")
@@ -82,61 +82,32 @@ if (secretPropsFile.exists()) {
     extra["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
     extra["signing.password"] = System.getenv("SIGNING_PASSWORD")
     extra["signing.secretKeyRingFile"] = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
-    extra["ossrhUsername"] = System.getenv("OSSRH_USERNAME")
-    extra["ossrhPassword"] = System.getenv("OSSRH_PASSWORD")
+    extra["mavenCentralUsername"] = System.getenv("MAVEN_CENTRAL_USERNAME")
+    extra["mavenCentralPassword"] = System.getenv("MAVEN_CENTRAL_PASSWORD")
 }
 
-publishing {
-    publications.withType<MavenPublication> {
-        groupId = "com.paleblueapps"
-        artifactId = "kmmcore"
-        version = "1.0"
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+    coordinates(
+        groupId = "com.paleblueapps",
+        artifactId = "kmmcore",
+        version = "1.0.0"
+    )
 
-        pom {
-            name.set("PaleBlueKmmCore")
-            description.set("A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms")
-            url.set("https://github.com/paleblueapps/pale-blue-kmm-core")
+    pom {
+        name = "PaleBlueKmmCore"
+        description = "A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms"
+        url = "https://github.com/paleblueapps/pale-blue-kmm-core"
 
-            licenses {
-//                license {
-//                    name.set("The Apache Software License, Version 2.0")
-//                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-//                    distribution.set("repo")
-//                }
-            }
-            developers {
-                developer {
-                    id.set("paleblueapps")
-                    name.set("Pale Blue")
-                }
-            }
-            scm {
-                url.set("https://github.com/paleblueapps/pale-blue-kmm-core")
+        developers {
+            developer {
+                id = "paleblueapps"
+                name = "Pale Blue"
             }
         }
-
-        repositories {
-            maven {
-                name = "sonatypeSnapshot"
-                setUrl("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                credentials {
-                    username = extra["ossrhUsername"] as? String
-                    password = extra["ossrhPassword"] as? String
-                }
-            }
-
-            maven {
-                name = "sonatype"
-                setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = extra["ossrhUsername"] as? String
-                    password = extra["ossrhPassword"] as? String
-                }
-            }
+        scm {
+            url = "https://github.com/paleblueapps/pale-blue-kmm-core"
         }
     }
-}
-
-signing {
-    sign(publishing.publications)
 }
