@@ -18,6 +18,7 @@ interface CurrencyFormatter {
      *
      *   ## Usage example
      * ```
+     * val currencyFormatter = CurrencyFormatter()
      * val formattedAmount = currencyFormatter.format(
      *     amount = 1234.56,
      *     currencyCode = "USD",
