@@ -9,6 +9,7 @@ A Kotlin Multiplatform (KMP) library for shared logic and common utilities acros
 -   **Networking:** A convenient layer for making network requests based on [Ktor](https://ktor.io/).
 -   **Key-Value Storage:** A cross-platform solution for storing and retrieving key-value pairs based on [datastore](https://developer.android.com/topic/libraries/architecture/datastore) and [multiplatform-settings](https://github.com/russhwolf/multiplatform-settings).
 -   **Currency Formatter:** A utility for formatting monetary values based on locale and currency code.
+-   **Number Formatter:** A utility for formatting numbers based on locale.
 
 ## Getting Started
 
@@ -97,4 +98,16 @@ val formattedAmount = currencyFormatter.format(
     minimumFractionDigits = 2,
     maximumFractionDigits = 2
 ) // "$1,234.56"
+```
+
+### Number formatter example
+```kotlin
+// Create NumberFormatter
+val numberFormatter = NumberFormatter()
+
+// Usage
+val formattedNumber = numberFormatter.format(
+    number = 1234567.89,
+    localeCode = "en-US",
+) // "1,234,567.89"
 ```
