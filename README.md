@@ -2,17 +2,20 @@
 
 A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms (Android, iOS)
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.paleblueapps/kmpcore.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.paleblueapps/kmpcore)
+
 ## Features
 
 -   **Networking:** A convenient layer for making network requests based on [Ktor](https://ktor.io/).
 -   **Key-Value Storage:** A cross-platform solution for storing and retrieving key-value pairs based on [datastore](https://developer.android.com/topic/libraries/architecture/datastore) and [multiplatform-settings](https://github.com/russhwolf/multiplatform-settings).
+-   **Currency Formatter:** A utility for formatting monetary values based on locale and currency code.
 
 ## Getting Started
 
 Add the library dependency to your `build.gradle.kts` or `build.gradle` file.
 ```kotlin
 dependencies {
-    implementation("com.paleblueapps:kmpcore:1.0.0")
+    implementation("com.paleblueapps:kmpcore:[latest-version]")
 }
 ```
 
@@ -79,4 +82,19 @@ val userToken = preferencesManager.getEncryptedString("user_token")
 // Non encrypted storage example
 preferencesManager.putString("user_id", token)
 val userId = preferencesManager.getString("user_id")
+```
+
+### Currency formatter example
+```kotlin
+// Create CurrencyFormatter
+val currencyFormatter = CurrencyFormatter()
+
+// Usage
+val formattedAmount = currencyFormatter.format(
+    amount = 1234.56,
+    currencyCode = "USD",
+    withCurrencySymbol = true,
+    minimumFractionDigits = 2,
+    maximumFractionDigits = 2
+) // "$1,234.56"
 ```
