@@ -8,6 +8,7 @@ A Kotlin Multiplatform (KMP) library for shared logic and common utilities acros
 
 -   **Networking:** A convenient layer for making network requests based on [Ktor](https://ktor.io/).
 -   **Key-Value Storage:** A cross-platform solution for storing and retrieving key-value pairs based on [datastore](https://developer.android.com/topic/libraries/architecture/datastore) and [multiplatform-settings](https://github.com/russhwolf/multiplatform-settings).
+-   **KmmResult:** A type-safe wrapper for handling success and failure cases, inspired by [Kotlin Result](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/), with full type information preserved on all platforms.
 -   **Currency Formatter:** A utility for formatting monetary values based on locale and currency code.
 -   **Number Formatter:** A utility for formatting numbers based on locale.
 
@@ -38,13 +39,13 @@ val apiManager = ApiManager(
             else -> throw Error.BackendError
         }
     },
-)
+) // Or you can pass the custom Ktor client instance
 
 
 
 // Usage
 val endpoint = Endpoint("/users", HttpMethod.Get)
-val userResult: Result<User> = call(endpoint)
+val userResult: Result<User> = apiManager.call(endpoint)
 userResult.onSuccess { user ->
     println("User ID: ${user.id}, User Name: ${user.name}")
 }.onFailure { exception ->
