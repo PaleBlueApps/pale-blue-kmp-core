@@ -15,6 +15,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.LoggingConfig
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -37,6 +38,7 @@ interface ApiManager {
      * @param body The optional request body. Defaults to an empty string. Can be any object that Ktor can serialize.
      * @param queryParameters A map of query parameters to include in the request URL. Defaults to an empty map.
      * @param headers A list of headers to include in the request. Each header is represented as a pair of (name, value). Defaults to an empty list.
+     * @param contentType The content type of the request body.
      * @param additional An optional lambda that can be used to add further customization to the [HttpRequestBuilder].
      *                   This allows setting things like request timeout or custom headers not covered by the `headers` parameter.
      *                   Defaults to an empty lambda (no additional customization).
@@ -50,6 +52,7 @@ interface ApiManager {
         body: Any? = "",
         queryParameters: Map<String, String> = emptyMap(),
         headers: List<Pair<String, String>> = emptyList(),
+        contentType: ContentType? = null,
         additional: HttpRequestBuilder.() -> Unit = {},
     ): Result<HttpResponse>
 }

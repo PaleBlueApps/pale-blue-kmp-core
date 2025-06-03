@@ -41,15 +41,16 @@ internal class RealApiManager(
         body: Any?,
         queryParameters: Map<String, String>,
         headers: List<Pair<String, String>>,
+        contentType: ContentType?,
         additional: HttpRequestBuilder.() -> Unit,
     ): Result<HttpResponse> = withContext(Dispatchers.IO) {
         val httpRequest = HttpRequestBuilder().apply {
             method = endpoint.method
             endpoint(path = endpoint.path)
-            contentType(ContentType.Application.Json)
             setBody(body)
             parametersMapOf(queryParameters)
             headerListOf(headers)
+            contentType?.let { contentType(it) }
             additional()
         }
         runCatching { client.request(httpRequest) }
