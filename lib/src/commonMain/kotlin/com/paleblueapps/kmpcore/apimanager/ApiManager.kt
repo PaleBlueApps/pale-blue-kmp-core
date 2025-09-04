@@ -1,18 +1,17 @@
 package com.paleblueapps.kmpcore.apimanager
 
 import io.ktor.client.HttpClient
-import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.HttpTimeoutConfig
 import io.ktor.client.plugins.ResponseValidator
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.AuthConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.plugins.logging.LoggingConfig
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
@@ -55,6 +54,8 @@ interface ApiManager {
         contentType: ContentType? = null,
         additional: HttpRequestBuilder.() -> Unit = {},
     ): Result<HttpResponse>
+
+    fun invalidateBearerTokens()
 }
 
 /**
@@ -117,7 +118,7 @@ suspend inline fun <reified Res : Any> ApiManager.call(
  */
 fun ApiManager(
     baseUrl: String,
-    client: HttpClient
+    client: HttpClient,
 ): ApiManager = RealApiManager(
     baseUrl = baseUrl,
     client = client,
@@ -136,6 +137,7 @@ fun ApiManager(
  * @property connectTimeout The maximum duration allowed for establishing a connection to the server. Defaults to 30 seconds.
  * @property defaultRequestConfig A lambda function to configure the `DefaultRequest` plugin. Useful for setting default headers, authentication, etc.
  * @property responseValidator A lambda function to validate the HTTP response.
+ * @property authConfig A lambda function to configure the `Auth` plugin. Useful for setting up authentication mechanisms like Bearer Token, Basic Auth, etc.
  *
  * ## Usage example
  * ```
@@ -165,6 +167,7 @@ fun ApiManager(
     connectTimeout: Duration = 30.seconds,
     defaultRequestConfig: DefaultRequest.DefaultRequestBuilder.() -> Unit = {},
     responseValidator: ResponseValidator = {},
+    authConfig: (AuthConfig.() -> Unit)? = null,
 ): ApiManager = RealApiManager(
     baseUrl = baseUrl,
     client = HttpClient {
@@ -189,6 +192,8 @@ fun ApiManager(
             socketTimeoutMillis = socketTimeout.inWholeMilliseconds
             connectTimeoutMillis = connectTimeout.inWholeMilliseconds
         }
+
+        authConfig?.let { install(Auth, authConfig) }
 
         HttpResponseValidator { validateResponse(responseValidator) }
     }
