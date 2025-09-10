@@ -1,18 +1,8 @@
 package com.paleblueapps.kmpcore.apimanager
 
 import io.ktor.client.HttpClient
-import io.ktor.client.HttpClientConfig
-import io.ktor.client.call.body
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.HttpResponseValidator
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.HttpTimeoutConfig
-import io.ktor.client.plugins.ResponseValidator
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.plugins.logging.LoggingConfig
+import io.ktor.client.plugins.auth.authProvider
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
@@ -21,15 +11,10 @@ import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
-import io.ktor.http.Url
 import io.ktor.http.contentType
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 internal class RealApiManager(
     private val baseUrl: String,
@@ -54,6 +39,10 @@ internal class RealApiManager(
             additional()
         }
         runCatching { client.request(httpRequest) }
+    }
+
+    override fun invalidateBearerTokens() {
+        client.authProvider<BearerAuthProvider>()?.clearToken()
     }
 
     private fun HttpRequestBuilder.endpoint(path: String) {

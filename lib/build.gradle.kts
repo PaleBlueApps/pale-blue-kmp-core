@@ -27,10 +27,12 @@ kotlin {
         commonMain.dependencies {
             // ktor
             api(libs.ktor.client.core)
-            implementation(libs.kotlinx.coroutines.core)
+            api(libs.ktor.client.auth)
+            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.ktor.client.logging)
+
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
 
             // multiplatform settings
@@ -68,7 +70,7 @@ mavenPublishing {
     coordinates(
         groupId = "com.paleblueapps",
         artifactId = "kmpcore",
-        version = "1.1.0"
+        version = "1.2.0"
     )
 
     pom {
