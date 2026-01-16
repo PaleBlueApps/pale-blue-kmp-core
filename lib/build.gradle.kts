@@ -37,9 +37,12 @@ kotlin {
             // multiplatform settings
             implementation(libs.multiplatform.settings)
             implementation(libs.androidx.datastore.preferences.core)
+
+            implementation(libs.kotlinx.datetime)
         }
 
         androidMain.dependencies {
+            implementation(libs.androidx.activity.ktx)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.security.crypto)
@@ -69,7 +72,7 @@ mavenPublishing {
     coordinates(
         groupId = "com.paleblueapps",
         artifactId = "kmpcore",
-        version = "1.3.0"
+        version = "1.4.0"
     )
 
     pom {

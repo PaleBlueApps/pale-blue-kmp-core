@@ -112,3 +112,85 @@ val formattedNumber = numberFormatter.format(
     localeCode = "en-US",
 ) // "1,234,567.89"
 ```
+
+### Auto rating system
+
+The `RatingService` helps automate the process of asking users for app ratings or feedback. It tracks user actions and ensures that prompts are not shown too frequently.
+
+#### 1. Setup
+
+In your common code, you can define the `RatingService` instance.
+
+```kotlin
+// commonMain
+expect val ratingService: RatingService
+```
+
+On Android, provide the `applicationContext`:
+
+```kotlin
+// androidMain
+actual val ratingService: RatingService = RatingService(applicationContext)
+
+// In your Activity, bind it to handle dialog presentation
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ratingService.bind(this)
+    }
+}
+```
+
+On iOS:
+
+```kotlin
+// iosMain
+actual val ratingService: RatingService = RatingService()
+```
+
+#### 2. Configuration
+
+Configure the service with custom dialog messages and rules:
+
+```kotlin
+ratingService.configure(
+    ratingDialogConfig = DialogConfig(
+        title = "Enjoying the app?",
+        message = "Would you like to rate us on the store?",
+        positiveButtonText = "Rate Now",
+        negativeButtonText = "Maybe Later"
+    ),
+    feedbackDialogConfig = DialogConfig(
+        title = "Feedback",
+        message = "How can we improve?",
+        positiveButtonText = "Send Feedback",
+        negativeButtonText = "Cancel"
+    ),
+    snoozeDuration = 30.days,
+    minActionsNeededForAskingReview = 5
+)
+```
+
+#### 3. Tracking and Triggering
+
+Log user actions (e.g., when a user completes a task) and attempt to show the rating flow:
+
+```kotlin
+// Log an action
+ratingService.logUserAction()
+
+// Start the rating flow
+ratingService.startRatingFlow { event ->
+    when (event) {
+        RatingEvent.OnRatingPositiveClick -> {
+            // Redirect to App Store / Play Store
+        }
+        RatingEvent.OnFeedbackPositiveClick -> {
+            // Open feedback form or email
+        }
+        else -> {
+            // Handle other events if needed
+        }
+    }
+}
+```
