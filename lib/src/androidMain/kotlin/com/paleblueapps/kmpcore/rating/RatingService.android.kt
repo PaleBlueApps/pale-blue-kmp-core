@@ -50,7 +50,9 @@ internal class AndroidRatingService(private val context: Context) : RealRatingSe
         val observer = object : LifecycleEventObserver {
             override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
                 if (event == Lifecycle.Event.ON_DESTROY) {
-                    this@AndroidRatingService.activity = null
+                    if (this@AndroidRatingService.activity === source) {
+                        this@AndroidRatingService.activity = null
+                    }
                     source.lifecycle.removeObserver(this)
                 }
             }
