@@ -16,7 +16,7 @@ data class DialogConfig(
         )
 
         val FEEDBACK = DialogConfig(
-            title = "We are sorry to hear that you are not super happy with Billin.",
+            title = "We are sorry to hear that you are not super happy with the app.",
             message = "What could we do to improve your experience?",
             positiveButtonText = "Give feedback",
             negativeButtonText = "Not now",
