@@ -32,7 +32,7 @@ expect interface RatingService {
         ratingDialogConfig: DialogConfig,
         feedbackDialogConfig: DialogConfig,
         snoozeDuration: Duration = 180.days,
-        minActionsNeededForAskingReview: Long = 3,
+        minActionsNeededForAskingReview: Int = 3,
     )
 
     /**
