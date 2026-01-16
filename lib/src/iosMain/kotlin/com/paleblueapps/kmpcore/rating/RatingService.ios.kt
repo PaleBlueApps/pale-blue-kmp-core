@@ -16,7 +16,7 @@ actual interface RatingService {
         ratingDialogConfig: DialogConfig,
         feedbackDialogConfig: DialogConfig,
         snoozeDuration: Duration,
-        minActionsNeededForAskingReview: Long,
+        minActionsNeededForAskingReview: Int,
     )
 
     actual suspend fun logUserAction()

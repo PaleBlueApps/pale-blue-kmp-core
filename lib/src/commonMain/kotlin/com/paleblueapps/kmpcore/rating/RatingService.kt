@@ -82,7 +82,7 @@ internal abstract class RealRatingService : RatingService {
     private var ratingDialogConfig: DialogConfig = DialogConfig.RATE_US
     private var feedbackDialogConfig: DialogConfig = DialogConfig.FEEDBACK
     private var snoozeDuration: Duration = 180.days
-    private var minActionsNeededForAskingReview: Long = 0
+    private var minActionsNeededForAskingReview: Int = 0
 
     internal abstract suspend fun showDialog(config: DialogConfig): DialogResult
 
@@ -90,7 +90,7 @@ internal abstract class RealRatingService : RatingService {
         ratingDialogConfig: DialogConfig,
         feedbackDialogConfig: DialogConfig,
         snoozeDuration: Duration,
-        minActionsNeededForAskingReview: Long,
+        minActionsNeededForAskingReview: Int,
     ) {
         this.ratingDialogConfig = ratingDialogConfig
         this.feedbackDialogConfig = feedbackDialogConfig
