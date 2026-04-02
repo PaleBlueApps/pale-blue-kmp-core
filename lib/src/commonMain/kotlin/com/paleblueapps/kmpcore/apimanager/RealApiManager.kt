@@ -13,7 +13,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
 internal class RealApiManager(
@@ -28,7 +27,7 @@ internal class RealApiManager(
         headers: List<Pair<String, String>>,
         contentType: ContentType?,
         additional: HttpRequestBuilder.() -> Unit,
-    ): Result<HttpResponse> = withContext(Dispatchers.IO) {
+    ): Result<HttpResponse> = withContext(Dispatchers.Default) {
         val httpRequest = HttpRequestBuilder().apply {
             method = endpoint.method
             endpoint(path = endpoint.path)

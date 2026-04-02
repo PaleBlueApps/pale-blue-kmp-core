@@ -17,7 +17,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlin.time.Duration
@@ -79,7 +78,7 @@ suspend inline fun <reified Res : Any> ApiManager.call(
     queryParameters: Map<String, String> = emptyMap(),
     headers: List<Pair<String, String>> = emptyList(),
     noinline additional: HttpRequestBuilder.() -> Unit = {},
-): Result<Res> = withContext(Dispatchers.IO) {
+): Result<Res> = withContext(Dispatchers.Default) {
     val result = request(
         endpoint = endpoint,
         body = body,
