@@ -66,7 +66,9 @@ internal object IosNumberFormatter: NumberFormatter {
             } ?: NSLocale.currentLocale()
         }
 
-        return numberFormat.numberFromString(text)?.intValue
+        val number = numberFormat.numberFromString(text) ?: return null
+        val longValue = number.longValue
+        return if (longValue < Int.MIN_VALUE || longValue > Int.MAX_VALUE) null else longValue.toInt()
     }
 
     override fun parseAsLong(text: String, localeCode: String?): Long? {

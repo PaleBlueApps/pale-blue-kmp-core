@@ -47,7 +47,8 @@ internal object AndroidNumberFormatter: NumberFormatter {
         } ?: NumberFormat.getNumberInstance()
 
         return try {
-            numberFormat.parse(text)?.toInt()
+            val number = numberFormat.parse(text)?.toLong() ?: return null
+            if (number < Int.MIN_VALUE || number > Int.MAX_VALUE) null else number.toInt()
         } catch (e: Exception) {
             null
         }

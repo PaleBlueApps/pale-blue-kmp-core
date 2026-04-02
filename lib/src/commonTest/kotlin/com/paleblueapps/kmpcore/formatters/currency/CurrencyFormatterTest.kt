@@ -1,6 +1,5 @@
-package com.paleblueapps.kmpcore.formatters
+package com.paleblueapps.kmpcore.formatters.currency
 
-import com.paleblueapps.kmpcore.formatters.currency.CurrencyFormatter
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

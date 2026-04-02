@@ -26,7 +26,7 @@ private external fun jsFormatCurrency(
 @JsFun("() => navigator.language || 'en-US'")
 private external fun jsDefaultLocale(): String
 
-actual fun CurrencyFormatter(): CurrencyFormatter = object : CurrencyFormatter {
+internal object WasmJsCurrencyFormatter : CurrencyFormatter {
     override fun format(
         amount: Double,
         currencyCode: String,
@@ -42,3 +42,5 @@ actual fun CurrencyFormatter(): CurrencyFormatter = object : CurrencyFormatter {
         jsDefaultLocale()
     )
 }
+
+actual fun CurrencyFormatter(): CurrencyFormatter = WasmJsCurrencyFormatter

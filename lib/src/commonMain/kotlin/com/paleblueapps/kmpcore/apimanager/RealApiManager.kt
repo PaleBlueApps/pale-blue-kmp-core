@@ -12,8 +12,6 @@ import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 internal class RealApiManager(
     private val baseUrl: String,
@@ -27,7 +25,7 @@ internal class RealApiManager(
         headers: List<Pair<String, String>>,
         contentType: ContentType?,
         additional: HttpRequestBuilder.() -> Unit,
-    ): Result<HttpResponse> = withContext(Dispatchers.Default) {
+    ): Result<HttpResponse> {
         val httpRequest = HttpRequestBuilder().apply {
             method = endpoint.method
             endpoint(path = endpoint.path)
@@ -37,7 +35,7 @@ internal class RealApiManager(
             contentType?.let { contentType(it) }
             additional()
         }
-        runCatching { client.request(httpRequest) }
+        return runCatching { client.request(httpRequest) }
     }
 
     override fun invalidateBearerTokens() {

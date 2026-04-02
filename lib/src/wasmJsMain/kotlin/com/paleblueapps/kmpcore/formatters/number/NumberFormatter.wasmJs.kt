@@ -17,7 +17,7 @@ private external fun jsPartValue(part: JsAny): String
 @JsFun("() => navigator.language || 'en-US'")
 private external fun jsDefaultLocale(): String
 
-actual fun NumberFormatter(): NumberFormatter = object : NumberFormatter {
+internal object WasmJsNumberFormatter : NumberFormatter {
 
     override fun format(value: Double, localeCode: String?): String =
         jsFormatNumber(value, localeCode ?: jsDefaultLocale())
@@ -62,3 +62,5 @@ private fun parseNumber(text: String, localeCode: String?): Double? {
         .replace(decimalSep, ".")
         .toDoubleOrNull()
 }
+
+actual fun NumberFormatter(): NumberFormatter = WasmJsNumberFormatter
