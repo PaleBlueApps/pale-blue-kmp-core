@@ -21,6 +21,11 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+    
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -50,6 +55,10 @@ kotlin {
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
         }
     }
 }

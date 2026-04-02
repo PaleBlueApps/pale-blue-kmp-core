@@ -12,6 +12,17 @@ A Kotlin Multiplatform (KMP) library for shared logic and common utilities acros
 -   **Currency Formatter:** A utility for formatting monetary values based on locale and currency code.
 -   **Number Formatter:** A utility for formatting numbers based on locale.
 
+## Supported Platforms
+
+| Feature | Android | iOS | WasmJs |
+| --- | --- | --- | --- |
+| Networking (ApiManager) | ✅ | ✅ | ✅ |
+| Key-Value Storage (PreferencesManager) | ✅ | ✅ | ✅ |
+| KmmResult | ✅ | ✅ | ✅ |
+| Currency Formatter | ✅ | ✅ | ✅ |
+| Number Formatter | ✅ | ✅ | ✅ |
+| Rating Service | ✅ | ✅ | ❌ |
+
 ## Getting Started
 
 Add the library dependency to your `build.gradle.kts` or `build.gradle` file.

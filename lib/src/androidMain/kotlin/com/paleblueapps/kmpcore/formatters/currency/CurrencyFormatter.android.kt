@@ -11,15 +11,17 @@ internal class AndroidCurrencyFormatter : CurrencyFormatter {
         minimumFractionDigits: Int,
         maximumFractionDigits: Int,
     ): String {
-        val format = NumberFormat.getCurrencyInstance()
-        val currency = Currency.getInstance(currencyCode)
-        format.currency = currency
-        format.maximumFractionDigits = maximumFractionDigits
-        format.minimumFractionDigits = minimumFractionDigits
-
-        if (!withCurrencySymbol) {
-            format.currency = null
+        val format = if (withCurrencySymbol) {
+            NumberFormat.getCurrencyInstance().also { f ->
+                f.currency = Currency.getInstance(currencyCode)
+            }
+        } else {
+            NumberFormat.getNumberInstance()
         }
+
+        format.minimumFractionDigits = minimumFractionDigits
+        format.maximumFractionDigits = maximumFractionDigits
+
         return format.format(amount)
     }
 }
