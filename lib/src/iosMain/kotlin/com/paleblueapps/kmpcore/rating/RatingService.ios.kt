@@ -1,6 +1,7 @@
 package com.paleblueapps.kmpcore.rating
 
 import com.paleblueapps.kmpcore.preferencesmanager.PreferencesManager
+import com.paleblueapps.kmpcore.preferencesmanager.BasePreferencesManager
 import kotlin.coroutines.resume
 import kotlin.time.Duration
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -29,9 +30,8 @@ actual interface RatingService {
 
 internal class IosRatingService : RealRatingService() {
 
-    override val preferencesManager: PreferencesManager = PreferencesManager(
-        preferencesFileName = PREFERENCES_NAME,
-        encryptedPreferencesFileName = ENCRYPTED_PREFERENCES_NAME,
+    override val preferencesManager: BasePreferencesManager = PreferencesManager(
+        fileName = PREFERENCES_NAME,
     )
 
     override suspend fun showDialog(config: DialogConfig): DialogResult =

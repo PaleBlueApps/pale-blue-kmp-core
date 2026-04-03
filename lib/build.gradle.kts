@@ -45,6 +45,8 @@ kotlin {
 
             // multiplatform settings
             implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.coroutines)
+            implementation(libs.multiplatform.settings.observable)
             implementation(libs.androidx.datastore.preferences.core)
 
             implementation(libs.kotlinx.datetime)
@@ -55,10 +57,13 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.security.crypto)
+            implementation(libs.multiplatform.settings.datastore)
+
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.multiplatform.settings.datastore)
         }
 
         commonTest.dependencies {
@@ -69,15 +74,15 @@ kotlin {
 
 mavenPublishing {
     publishToMavenCentral()
-    signAllPublications()
+//    signAllPublications()
     coordinates(
         groupId = "com.paleblueapps",
         artifactId = "kmpcore",
-        version = "1.4.0"
+        version = "2.0.0"
     )
 
     pom {
-        name = "PaleBlueKmmCore"
+        name = "PaleBlueKmpCore"
         description = "A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms"
         url = "https://github.com/paleblueapps/pale-blue-kmp-core"
 

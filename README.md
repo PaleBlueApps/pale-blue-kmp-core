@@ -14,23 +14,34 @@ A Kotlin Multiplatform (KMP) library for shared logic and common utilities acros
 
 ## Supported Platforms
 
-| Feature | Android | iOS | WasmJs |
-| --- | --- | --- | --- |
-| Networking (ApiManager) | ✅ | ✅ | ✅ |
-| Key-Value Storage (PreferencesManager) | ✅ | ✅ | ✅ |
-| KmmResult | ✅ | ✅ | ✅ |
-| Currency Formatter | ✅ | ✅ | ✅ |
-| Number Formatter | ✅ | ✅ | ✅ |
-| Rating Service | ✅ | ✅ | ❌ |
+| Feature                                         | Android | iOS | WasmJs |
+|-------------------------------------------------| -- | -- | -- |
+| Networking (ApiManager)                         | ✅ | ✅ | ✅ |
+| Key-Value Storage (PreferencesManager)          | ✅ | ✅ | ✅ |
+| Key-Value Storage (EncryptedPreferencesManager) | ✅ | ✅ | ❌ |
+| KmmResult                                       | ✅ | ✅ | ✅ |
+| Currency Formatter                              | ✅ | ✅ | ✅ |
+| Number Formatter                                | ✅ | ✅ | ✅ |
+| Rating Service                                  | ✅ | ✅ | ❌ |
 
 ## Getting Started
 
 Add the library dependency to your `build.gradle.kts` or `build.gradle` file.
 ```kotlin
 dependencies {
-    implementation("com.paleblueapps:kmpcore:[latest-version]")
+    implementation("com.paleblueapps:kmpcore:2.0.0")
 }
 ```
+
+## Migration to 2.0.0
+
+Version `2.0.0` introduces a breaking change to key-value storage: encrypted and non-encrypted storage are now separate managers.
+
+- `PreferencesManager` now handles only non-encrypted storage
+- `EncryptedPreferencesManager` now handles encrypted storage
+- Shared APIs moved to `BasePreferencesManager`
+
+See [MIGRATION.md](./MIGRATION.md) for the full upgrade guide.
 
 ### Networking example
 ```kotlin
@@ -66,36 +77,47 @@ userResult.onSuccess { user ->
 
 ### Key-value storage example
 ```kotlin
-// Create PreferencesManager
-
 // file: commonMain/PreferencesManager.kt
-val preferencesFileName = "preferences.preferences_pb" // NOTE: this file extension should be preferences_pb
+val preferencesFileName = "preferences.preferences_pb" // NOTE: this file extension should be .preferences_pb
 val encryptedPreferencesFileName = "encrypted_preferences"
+
 expect val preferencesManager: PreferencesManager
+expect val encryptedPreferencesManager: EncryptedPreferencesManager
 
 // file: androidMain/PreferencesManager.kt
 actual val preferencesManager = PreferencesManager(
-    context = androidContext(), // pass the android context here either manually or using DI framework
-    preferencesFileName = preferencesFileName,
-    encryptedPreferencesFileName = encryptedPreferencesFileName,
+    context = androidContext(), // pass the Android context here either manually or using a DI framework
+    fileName = preferencesFileName,
+)
+
+actual val encryptedPreferencesManager = EncryptedPreferencesManager(
+    context = androidContext(),
+    fileName = encryptedPreferencesFileName,
 )
 
 // file: iosMain/PreferencesManager.kt
 actual val preferencesManager = PreferencesManager(
-    preferencesFileName = preferencesFileName,
-    encryptedPreferencesFileName = encryptedPreferencesFileName,
+    fileName = preferencesFileName,
 )
 
+actual val encryptedPreferencesManager = EncryptedPreferencesManager(
+    fileName = encryptedPreferencesFileName,
+)
 
+// file: wasmJsMain/PreferencesManager.kt
+actual val preferencesManager = PreferencesManager()
+// Note: EncryptedPreferencesManager is not available on wasmJs.
 
 // Encrypted storage example
-preferencesManager.putEncryptedString("user_token", token)
-val userToken = preferencesManager.getEncryptedString("user_token")
+encryptedPreferencesManager.putString("user_token", token)
+val userToken = encryptedPreferencesManager.getString("user_token")
 
-// Non encrypted storage example
-preferencesManager.putString("user_id", token)
-val userId = preferencesManager.getString("user_id")
+// Non-encrypted storage example
+preferencesManager.putString("user_id", userId)
+val storedUserId = preferencesManager.getString("user_id")
 ```
+
+On wasmJs, `PreferencesManager` uses browser-backed storage and does not require a `fileName`. `EncryptedPreferencesManager` is not supported on wasmJs.
 
 ### Currency formatter example
 ```kotlin

@@ -1,150 +1,94 @@
 package com.paleblueapps.kmpcore.preferencesmanager
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.doublePreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.floatPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
-import com.russhwolf.settings.Settings
+import com.russhwolf.settings.ExperimentalSettingsApi
+import com.russhwolf.settings.coroutines.FlowSettings
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 
+@OptIn(ExperimentalSettingsApi::class)
 internal class RealPreferencesManager(
-    private val datastore: DataStore<Preferences>,
-    private val encryptedSettings: Settings,
+    private val settings: FlowSettings,
+    private val json: Json
 ) : PreferencesManager {
 
     override suspend fun getBoolean(key: String): Boolean? {
-        val datastoreKey = booleanPreferencesKey(key)
-        val preferences = datastore.data.first()
-        return preferences[datastoreKey]
+        return settings.getBooleanOrNull(key)
     }
 
     override suspend fun putBoolean(key: String, value: Boolean) {
-        val datastoreKey = booleanPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences[datastoreKey] = value
-        }
+        settings.putBoolean(key, value)
     }
 
     override suspend fun removeBoolean(key: String) {
-        val datastoreKey = booleanPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences.remove(datastoreKey)
-        }
+        settings.remove(key)
     }
 
     override suspend fun getInt(key: String): Int? {
-        val datastoreKey = intPreferencesKey(key)
-        val preferences = datastore.data.first()
-        return preferences[datastoreKey]
+        return settings.getIntOrNull(key)
     }
 
     override suspend fun putInt(key: String, value: Int) {
-        val datastoreKey = intPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences[datastoreKey] = value
-        }
+        settings.putInt(key, value)
     }
 
     override suspend fun removeInt(key: String) {
-        val datastoreKey = intPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences.remove(datastoreKey)
-        }
+        settings.remove(key)
     }
 
     override suspend fun getString(key: String): String? {
-        val datastoreKey = stringPreferencesKey(key)
-        val preferences = datastore.data.first()
-        return preferences[datastoreKey]
+        return settings.getStringOrNull(key)
     }
 
     override suspend fun putString(key: String, value: String) {
-        val datastoreKey = stringPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences[datastoreKey] = value
-        }
+        settings.putString(key, value)
     }
 
     override suspend fun removeString(key: String) {
-        val datastoreKey = stringPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences.remove(datastoreKey)
-        }
+        settings.remove(key)
     }
 
     override suspend fun getLong(key: String): Long? {
-        val datastoreKey = longPreferencesKey(key)
-        val preferences = datastore.data.first()
-        return preferences[datastoreKey]?.toLong()
+        return settings.getLongOrNull(key)
     }
 
     override suspend fun putLong(key: String, value: Long) {
-        val datastoreKey = longPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences[datastoreKey] = value
-        }
+        settings.putLong(key, value)
     }
 
     override suspend fun removeLong(key: String) {
-        val datastoreKey = longPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences.remove(datastoreKey)
-        }
+        settings.remove(key)
     }
 
     override suspend fun getFloat(key: String): Float? {
-        val datastoreKey = floatPreferencesKey(key)
-        val preferences = datastore.data.first()
-        return preferences[datastoreKey]
+        return settings.getFloatOrNull(key)
     }
 
     override suspend fun putFloat(key: String, value: Float) {
-        val datastoreKey = floatPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences[datastoreKey] = value
-        }
+        settings.putFloat(key, value)
     }
 
     override suspend fun removeFloat(key: String) {
-        val datastoreKey = floatPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences.remove(datastoreKey)
-        }
+        settings.remove(key)
     }
 
     override suspend fun getDouble(key: String): Double? {
-        val datastoreKey = doublePreferencesKey(key)
-        val preferences = datastore.data.first()
-        return preferences[datastoreKey]?.toDouble()
+        return settings.getDoubleOrNull(key)
     }
 
     override suspend fun putDouble(key: String, value: Double) {
-        val datastoreKey = doublePreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences[datastoreKey] = value
-        }
+        settings.putDouble(key, value)
     }
 
     override suspend fun removeDouble(key: String) {
-        val datastoreKey = doublePreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences.remove(datastoreKey)
-        }
+        settings.remove(key)
     }
 
     override suspend fun <T> getObject(deserializer: DeserializationStrategy<T>, key: String): T? {
         val raw = getString(key)
-        return raw?.let { Json.decodeFromString(deserializer, it) }
+        return raw?.let { json.decodeFromString(deserializer, it) }
     }
 
     override suspend fun <T> putObject(
@@ -152,63 +96,46 @@ internal class RealPreferencesManager(
         key: String,
         value: T,
     ) {
-        val raw = Json.encodeToString(serializer, value)
+        val raw = json.encodeToString(serializer, value)
         putString(key, raw)
     }
 
     override suspend fun removeObject(key: String) {
-        val datastoreKey = stringPreferencesKey(key)
-        datastore.edit { preferences ->
-            preferences.remove(datastoreKey)
-        }
-    }
-
-    override suspend fun getEncryptedString(key: String): String? {
-        return encryptedSettings.getStringOrNull(key)
-    }
-
-    override suspend fun putEncryptedString(key: String, value: String) {
-        encryptedSettings.putString(key, value)
-    }
-
-    override suspend fun removeEncryptedString(key: String) {
-        encryptedSettings.remove(key)
-    }
-
-    override suspend fun <T> getEncryptedObject(
-        deserializer: DeserializationStrategy<T>,
-        key: String,
-    ): T? {
-        val raw = getEncryptedString(key)
-        return raw?.let { Json.decodeFromString(deserializer, it) }
-    }
-
-    override suspend fun <T> putEncryptedObject(
-        serializer: SerializationStrategy<T>,
-        key: String,
-        value: T,
-    ) {
-        val raw = Json.encodeToString(serializer, value)
-        putEncryptedString(key, raw)
+        settings.remove(key)
     }
 
     override fun getStringAsFlow(key: String): Flow<String?> {
-        val datastoreKey = stringPreferencesKey(key)
-        return datastore.data.map { preferences -> preferences[datastoreKey] }
+        return settings.getStringOrNullFlow(key)
+    }
+
+    override fun getBooleanAsFlow(key: String): Flow<Boolean?> {
+        return settings.getBooleanOrNullFlow(key)
+    }
+
+    override fun getDoubleAsFlow(key: String): Flow<Double?> {
+        return settings.getDoubleOrNullFlow(key)
+    }
+
+    override fun getFloatAsFlow(key: String): Flow<Float?> {
+        return settings.getFloatOrNullFlow(key)
+    }
+
+    override fun getIntAsFlow(key: String): Flow<Int?> {
+        return settings.getIntOrNullFlow(key)
+    }
+
+    override fun getLongAsFlow(key: String): Flow<Long?> {
+        return settings.getLongOrNullFlow(key)
     }
 
     override fun <T> getObjectAsFlow(
         deserializer: DeserializationStrategy<T>,
         key: String,
     ): Flow<T?> {
-        val raw = getStringAsFlow(key)
-        return raw.map { it?.let { Json.decodeFromString(deserializer, it) } }
+        return getStringAsFlow(key).map { it?.let { json.decodeFromString(deserializer, it) } }
     }
 
     override suspend fun clear() {
-        datastore.edit { preferences ->
-            preferences.clear()
-        }
-        encryptedSettings.clear()
+        settings.clear()
     }
 }

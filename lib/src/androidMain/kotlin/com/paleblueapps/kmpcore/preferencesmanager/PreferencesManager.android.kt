@@ -4,41 +4,33 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.SharedPreferencesSettings
+import com.russhwolf.settings.ExperimentalSettingsApi
+import com.russhwolf.settings.ExperimentalSettingsImplementation
+import com.russhwolf.settings.datastore.DataStoreSettings
+import kotlinx.serialization.json.Json
 import okio.Path.Companion.toPath
 
-private var dataStore: DataStore<Preferences>? = null
-private var encryptedSettings: Settings? = null
+private val dataStoresByPath = mutableMapOf<String, DataStore<Preferences>>()
 
+@OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
 fun PreferencesManager(
     context: Context,
-    preferencesFileName: String,
-    encryptedPreferencesFileName: String,
+    fileName: String,
+    json: Json = Json
 ): PreferencesManager {
-    if (dataStore == null) {
-        dataStore = PreferenceDataStoreFactory.createWithPath(
-            corruptionHandler = null,
-            migrations = emptyList(),
-            produceFile = { context.filesDir.resolve(preferencesFileName).absolutePath.toPath() },
-        )
+    require(fileName.endsWith(".preferences_pb")) {
+        "Preferences file name must end with '.preferences_pb', got: '$fileName'"
     }
-    if (encryptedSettings == null) {
-        encryptedSettings = SharedPreferencesSettings(
-            delegate = EncryptedSharedPreferences.create(
-                encryptedPreferencesFileName,
-                MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-                context,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-            ),
+
+    val filePath = context.filesDir.resolve(fileName).absolutePath
+    val dataStore = dataStoresByPath.getOrPut(filePath) {
+        PreferenceDataStoreFactory.createWithPath(
+            produceFile = { filePath.toPath() },
         )
     }
 
     return RealPreferencesManager(
-        datastore = dataStore!!,
-        encryptedSettings = encryptedSettings!!,
+        settings = DataStoreSettings(dataStore),
+        json = json
     )
 }
