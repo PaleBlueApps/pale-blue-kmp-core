@@ -31,8 +31,7 @@ actual interface RatingService {
 internal class IosRatingService : RealRatingService() {
 
     override val preferencesManager: BasePreferencesManager = PreferencesManager(
-        preferencesFileName = PREFERENCES_NAME,
-        encryptedPreferencesFileName = ENCRYPTED_PREFERENCES_NAME,
+        fileName = PREFERENCES_NAME,
     )
 
     override suspend fun showDialog(config: DialogConfig): DialogResult =

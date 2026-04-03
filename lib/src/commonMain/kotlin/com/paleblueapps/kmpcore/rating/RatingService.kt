@@ -72,7 +72,6 @@ internal abstract class RealRatingService : RatingService {
 
     companion object {
         internal const val PREFERENCES_NAME = "kmp-preferences.preferences_pb"
-        internal const val ENCRYPTED_PREFERENCES_NAME = "encrypted_kmp_preferences"
         private const val HAS_REVIEWED_APP_KEY = "has_reviewed_app"
         private const val LAST_PROMPT_FOR_REVIEW_MILLIS_KEY = "last_prompt_for_review_millis"
         private const val REVIEW_ACTIONS_COUNT_KEY = "review_actions_count"

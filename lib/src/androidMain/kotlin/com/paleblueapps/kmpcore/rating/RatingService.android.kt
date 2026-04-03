@@ -41,7 +41,7 @@ internal class AndroidRatingService(private val context: Context) : RealRatingSe
 
     override val preferencesManager: BasePreferencesManager = PreferencesManager(
         context = context,
-        preferencesFileName = PREFERENCES_NAME,
+        fileName = PREFERENCES_NAME,
     )
 
     override fun bind(activity: ComponentActivity) {

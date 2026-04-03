@@ -1,6 +1,8 @@
 package com.paleblueapps.kmpcore.preferencesmanager
 
+import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.datastore.DataStoreSettings
@@ -11,6 +13,8 @@ import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
+
+private val dataStoresByPath = mutableMapOf<String, DataStore<Preferences>>()
 
 @OptIn(
     ExperimentalSettingsImplementation::class,
@@ -24,20 +28,19 @@ fun PreferencesManager(
     require(fileName.endsWith(".preferences_pb")) {
         "Preferences file name must end with '.preferences_pb', got: '$fileName'"
     }
-    val dataStore = PreferenceDataStoreFactory.createWithPath(
-        corruptionHandler = null,
-        migrations = emptyList(),
-        produceFile = {
-            val documentDirectory: NSURL? = NSFileManager.defaultManager.URLForDirectory(
-                directory = NSDocumentDirectory,
-                inDomain = NSUserDomainMask,
-                appropriateForURL = null,
-                create = false,
-                error = null,
-            )
-            (requireNotNull(documentDirectory).path + "/$fileName").toPath()
-        },
+    val documentDirectory: NSURL? = NSFileManager.defaultManager.URLForDirectory(
+        directory = NSDocumentDirectory,
+        inDomain = NSUserDomainMask,
+        appropriateForURL = null,
+        create = false,
+        error = null,
     )
+    val filePath = requireNotNull(documentDirectory).path + "/$fileName"
+    val dataStore = dataStoresByPath.getOrPut(filePath) {
+        PreferenceDataStoreFactory.createWithPath(
+            produceFile = { filePath.toPath() },
+        )
+    }
 
     return RealPreferencesManager(
         settings = DataStoreSettings(dataStore),

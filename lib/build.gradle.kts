@@ -42,7 +42,6 @@ kotlin {
             // multiplatform settings
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.coroutines)
-            implementation(libs.multiplatform.settings.datastore)
             implementation(libs.multiplatform.settings.observable)
             implementation(libs.androidx.datastore.preferences.core)
 
@@ -54,10 +53,13 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.security.crypto)
+            implementation(libs.multiplatform.settings.datastore)
+
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.multiplatform.settings.datastore)
         }
 
         commonTest.dependencies {
@@ -80,7 +82,7 @@ android {
 
 mavenPublishing {
     publishToMavenCentral()
-    signAllPublications()
+//    signAllPublications()
     coordinates(
         groupId = "com.paleblueapps",
         artifactId = "kmpcore",
