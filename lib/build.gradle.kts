@@ -90,7 +90,7 @@ mavenPublishing {
     )
 
     pom {
-        name = "PaleBlueKmmCore"
+        name = "PaleBlueKmpCore"
         description = "A Kotlin Multiplatform (KMP) library for shared logic and common utilities across platforms"
         url = "https://github.com/paleblueapps/pale-blue-kmp-core"
 
