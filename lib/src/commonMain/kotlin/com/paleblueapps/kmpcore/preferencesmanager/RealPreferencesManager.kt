@@ -85,7 +85,7 @@ internal class RealPreferencesManager(
     override suspend fun getLong(key: String): Long? {
         val datastoreKey = longPreferencesKey(key)
         val preferences = datastore.data.first()
-        return preferences[datastoreKey]
+        return preferences[datastoreKey]?.toLong()
     }
 
     override suspend fun putLong(key: String, value: Long) {
@@ -125,7 +125,7 @@ internal class RealPreferencesManager(
     override suspend fun getDouble(key: String): Double? {
         val datastoreKey = doublePreferencesKey(key)
         val preferences = datastore.data.first()
-        return preferences[datastoreKey]
+        return preferences[datastoreKey]?.toDouble()
     }
 
     override suspend fun putDouble(key: String, value: Double) {
