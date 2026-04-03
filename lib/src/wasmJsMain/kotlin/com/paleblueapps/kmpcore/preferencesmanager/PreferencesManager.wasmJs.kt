@@ -9,13 +9,8 @@ import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalSettingsImplementation::class, ExperimentalSettingsApi::class)
 fun PreferencesManager(
-    fileName: String,
     json: Json = Json
 ): PreferencesManager {
-    require(fileName.endsWith(".preferences_pb")) {
-        "Preferences file name must end with '.preferences_pb', got: '$fileName'"
-    }
-
     return RealPreferencesManager(
         settings = StorageSettings().makeObservable().toFlowSettings(),
         json = json,
