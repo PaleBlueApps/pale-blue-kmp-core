@@ -14,14 +14,15 @@ A Kotlin Multiplatform (KMP) library for shared logic and common utilities acros
 
 ## Supported Platforms
 
-| Feature | Android | iOS | WasmJs |
-| --- | --- | --- | --- |
-| Networking (ApiManager) | ✅ | ✅ | ✅ |
-| Key-Value Storage (PreferencesManager) | ✅ | ✅ | ✅ |
-| KmmResult | ✅ | ✅ | ✅ |
-| Currency Formatter | ✅ | ✅ | ✅ |
-| Number Formatter | ✅ | ✅ | ✅ |
-| Rating Service | ✅ | ✅ | ❌ |
+| Feature                                         | Android | iOS | WasmJs |
+|-------------------------------------------------| -- | -- | -- |
+| Networking (ApiManager)                         | ✅ | ✅ | ✅ |
+| Key-Value Storage (PreferencesManager)          | ✅ | ✅ | ✅ |
+| Key-Value Storage (EncryptedPreferencesManager) | ✅ | ✅ | ❌ |
+| KmmResult                                       | ✅ | ✅ | ✅ |
+| Currency Formatter                              | ✅ | ✅ | ✅ |
+| Number Formatter                                | ✅ | ✅ | ✅ |
+| Rating Service                                  | ✅ | ✅ | ❌ |
 
 ## Getting Started
 
