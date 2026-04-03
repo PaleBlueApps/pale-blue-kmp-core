@@ -1,6 +1,6 @@
 package com.paleblueapps.kmpcore.rating
 
-import com.paleblueapps.kmpcore.preferencesmanager.PreferencesManager
+import com.paleblueapps.kmpcore.preferencesmanager.BasePreferencesManager
 import com.paleblueapps.kmpcore.utilities.fromEpochMilliseconds
 import com.paleblueapps.kmpcore.utilities.now
 import com.paleblueapps.kmpcore.utilities.toEpochMilliseconds
@@ -78,7 +78,7 @@ internal abstract class RealRatingService : RatingService {
         private const val REVIEW_ACTIONS_COUNT_KEY = "review_actions_count"
     }
 
-    internal abstract val preferencesManager: PreferencesManager
+    internal abstract val preferencesManager: BasePreferencesManager
     private var ratingDialogConfig: DialogConfig = DialogConfig.RATE_US
     private var feedbackDialogConfig: DialogConfig = DialogConfig.FEEDBACK
     private var snoozeDuration: Duration = 180.days

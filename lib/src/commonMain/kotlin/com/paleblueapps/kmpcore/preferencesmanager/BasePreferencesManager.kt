@@ -5,7 +5,7 @@ import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.serializer
 
-interface PreferencesManager {
+interface BasePreferencesManager {
     suspend fun getBoolean(key: String): Boolean?
     suspend fun putBoolean(key: String, value: Boolean)
     suspend fun removeBoolean(key: String)
@@ -33,32 +33,29 @@ interface PreferencesManager {
     suspend fun <T> putObject(serializer: SerializationStrategy<T>, key: String, value: T)
     suspend fun <T> getObject(deserializer: DeserializationStrategy<T>, key: String): T?
     suspend fun removeObject(key: String)
-
-    suspend fun getEncryptedString(key: String): String?
-    suspend fun putEncryptedString(key: String, value: String)
-    suspend fun removeEncryptedString(key: String)
-
-    suspend fun <T> putEncryptedObject(serializer: SerializationStrategy<T>, key: String, value: T)
-    suspend fun <T> getEncryptedObject(deserializer: DeserializationStrategy<T>, key: String): T?
-
-    fun getStringAsFlow(key: String): Flow<String?>
-    fun <T> getObjectAsFlow(deserializer: DeserializationStrategy<T>, key: String): Flow<T?>
-
     suspend fun clear()
 }
 
-suspend inline fun <reified T> PreferencesManager.putObject(key: String, value: T) {
+interface PreferencesManager: BasePreferencesManager {
+    fun getStringAsFlow(key: String): Flow<String?>
+    fun getIntAsFlow(key: String): Flow<Int?>
+    fun getLongAsFlow(key: String): Flow<Long?>
+    fun getFloatAsFlow(key: String): Flow<Float?>
+    fun getDoubleAsFlow(key: String): Flow<Double?>
+    fun getBooleanAsFlow(key: String): Flow<Boolean?>
+    fun <T> getObjectAsFlow(deserializer: DeserializationStrategy<T>, key: String): Flow<T?>
+}
+
+interface EncryptedPreferencesManager: BasePreferencesManager
+
+suspend inline fun <reified T> BasePreferencesManager.putObject(key: String, value: T) {
     putObject(serializer(), key, value)
 }
 
-suspend inline fun <reified T> PreferencesManager.getObject(key: String): T? {
+suspend inline fun <reified T> BasePreferencesManager.getObject(key: String): T? {
     return getObject(serializer(), key)
 }
 
-suspend inline fun <reified T> PreferencesManager.putEncryptedObject(key: String, value: T) {
-    putEncryptedObject(serializer(), key, value)
-}
-
-suspend inline fun <reified T> PreferencesManager.getEncryptedObject(key: String): T? {
-    return getEncryptedObject(serializer(), key)
+inline fun <reified T> PreferencesManager.getObjectAsFlow(key: String): Flow<T?> {
+    return getObjectAsFlow(serializer(), key)
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.paleblueapps.kmpcore.R
 import com.paleblueapps.kmpcore.preferencesmanager.PreferencesManager
+import com.paleblueapps.kmpcore.preferencesmanager.BasePreferencesManager
 import kotlin.coroutines.resume
 import kotlin.time.Duration
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -38,10 +39,9 @@ internal class AndroidRatingService(private val context: Context) : RealRatingSe
 
     private var activity: ComponentActivity? = null
 
-    override val preferencesManager: PreferencesManager = PreferencesManager(
+    override val preferencesManager: BasePreferencesManager = PreferencesManager(
         context = context,
         preferencesFileName = PREFERENCES_NAME,
-        encryptedPreferencesFileName = ENCRYPTED_PREFERENCES_NAME,
     )
 
     override fun bind(activity: ComponentActivity) {

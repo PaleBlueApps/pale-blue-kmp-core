@@ -41,6 +41,9 @@ kotlin {
 
             // multiplatform settings
             implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.coroutines)
+            implementation(libs.multiplatform.settings.datastore)
+            implementation(libs.multiplatform.settings.observable)
             implementation(libs.androidx.datastore.preferences.core)
 
             implementation(libs.kotlinx.datetime)
