@@ -74,7 +74,7 @@ kotlin {
 
 mavenPublishing {
     publishToMavenCentral()
-//    signAllPublications()
+    signAllPublications()
     coordinates(
         groupId = "com.paleblueapps",
         artifactId = "kmpcore",
