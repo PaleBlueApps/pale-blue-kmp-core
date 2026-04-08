@@ -11,6 +11,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 
 internal class RealApiManager(
@@ -29,7 +30,9 @@ internal class RealApiManager(
         val httpRequest = HttpRequestBuilder().apply {
             method = endpoint.method
             endpoint(path = endpoint.path)
-            setBody(body)
+            if (method != HttpMethod.Get && method != HttpMethod.Head) {
+                setBody(body)
+            }
             parametersMapOf(queryParameters)
             headerListOf(headers)
             contentType?.let { contentType(it) }
