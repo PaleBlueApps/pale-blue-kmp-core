@@ -16,7 +16,7 @@ import io.ktor.http.contentType
 
 internal class RealApiManager(
     private val baseUrl: String,
-    private val client: HttpClient
+    override val client: HttpClient
 ): ApiManager {
 
     override suspend fun request(

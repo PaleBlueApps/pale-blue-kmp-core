@@ -29,6 +29,8 @@ import kotlin.time.Duration.Companion.seconds
  */
 interface ApiManager {
 
+    val client: HttpClient
+
     /**
      * Makes an asynchronous HTTP request to the specified endpoint.
      *

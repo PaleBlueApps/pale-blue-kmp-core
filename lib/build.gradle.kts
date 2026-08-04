@@ -78,7 +78,7 @@ mavenPublishing {
     coordinates(
         groupId = "com.paleblueapps",
         artifactId = "kmpcore",
-        version = "2.0.1"
+        version = "2.0.2"
     )
 
     pom {
